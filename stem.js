@@ -1,36 +1,89 @@
-var Stem = function () {
+/*
+    Hello!
+    Thanks for checking out my extension ported to Scratch 3.
+    This was my first test with extensions for Scratch 3.
+*/
+
+var Notifications = function () {
 };
 
 /**
  * @return {object} This extension's metadata.
  */
-Stem.prototype.getInfo = function () {
+Notifications.prototype.getInfo = function () {
     return {
-        id: 'stem',
+        id: 'someBlocks',
 
-        name: '语音与智能',
+        name: 'notifications',
 
         blocks: [
             {
-                opcode: 'stem-say',
+                opcode: 'notification-show',
                 blockType: Scratch.BlockType.COMMAND,
-                text: '说 [TEXT]',
-                func: 'say',
+                blockAllThreads: false,
+                text: 'Notify title [TITLE] content [CONTENT] image [IMAGE]',
+                func: 'showNotification',
                 arguments: {
-                    TEXT: {
+                    TITLE: {
                         type: Scratch.ArgumentType.STRING,
-                        defaultValue: '你好世界！'
+                        defaultValue: 'Hello World!'
+                    },
+                    CONTENT: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'I\'m a notification.'
+                    },
+                    IMAGE: {
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: 'https://jgames101.github.io/scratch-extensions/cat.png'
                     }
                 }
             },
+            {
+                opcode: 'notification-permitted',
+                blockType: Scratch.BlockType.BOOLEAN,
+                text: 'notifications permitted?',
+                func: 'notPermitted'
+            }
         ],
+
+        // translations
+        translation_map: {
+            fr: {
+                'extensionName': 'Notifications',
+                'notification-show': 'Nouveau Notification titre [TITLE] soustitre [CONTENT] image [IMAGE]',
+                'notification-show.TITLE_default': 'Bonjour, Monde!',
+                'notification-show.CONTENT_default': 'Je suis un notification.',
+                'notification-permitted': 'Notifications Permission?'
+            }
+        }
     };
 };
 
 /**
  * Implement myReporter.
  * @param {object} args - the block's arguments.
+ * @property {number} LETTER_NUM - the string value of the argument.
+ * @property {string} TEXT - the string value of the argument.
+ * @returns {string} a string which includes the block argument value.
  */
-Stem.prototype.say = function (args) {
-    console.log(args.TEXT);
+Notifications.prototype.showNotification = function (args) {
+    if (Notification.permission !== "granted")
+        Notification.requestPermission();
+    else {
+        var notification = new Notification(args.TITLE, {
+        icon: args.IMAGE,
+        body: args.CONTENT,
+        title: args.TITLE
+    })};
 };
+
+Notifications.prototype.notPermitted = function () {
+    if (Notification.permission !== "granted")
+		return false;
+	else {
+		return true;
+    };
+};
+
+Scratch.extensions.register(new Notifications());
+navigator.Notification.requestPermission();
