@@ -13,13 +13,13 @@ Stem.prototype.getInfo = function () {
         blocks: [
             {
                 opcode: 'stem-say',
-                blockType: 'command',
+                blockType: Scratch.BlockType.COMMAND,
                 text: '说 [TEXT]',
                 func: 'say',
                 arguments: {
                     TEXT: {
-                        type: 'string',
-                        default: '你好世界！'
+                        type: Scratch.ArgumentType.STRING,
+                        defaultValue: '你好世界！'
                     }
                 }
             },
@@ -30,8 +30,6 @@ Stem.prototype.getInfo = function () {
 /**
  * Implement myReporter.
  * @param {object} args - the block's arguments.
- * @property {string} MY_ARG - the string value of the argument.
- * @returns {string} a string which includes the block argument value.
  */
 Stem.prototype.say = function (args) {
     console.log(args.TEXT);
